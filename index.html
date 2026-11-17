@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>บันทึกรับ-จ่ายวัคซีน รพ.สต.เกาะแต้ว</title>
+<title>ระบบคลังวัคซีน รพ.สต.เกาะแต้ว</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,295 +31,452 @@
     font-family: "Sarabun", "Tahoma", system-ui, sans-serif;
     font-size: 16px;
     color: var(--ink);
-    background:
-      radial-gradient(1200px 500px at 50% -200px, #cdeae5 0%, transparent 70%),
-      var(--bg);
+    background: radial-gradient(1200px 500px at 50% -200px, #cdeae5 0%, transparent 70%), var(--bg);
     min-height: 100vh;
-    padding: 0 0 40px;
+    padding-bottom: 40px;
   }
+  .hidden { display: none !important; }
 
-  /* ===== Header ===== */
+  /* ===== Header & tabs ===== */
   .hero {
     background: linear-gradient(135deg, var(--brand) 0%, #14968b 100%);
-    color: #fff;
-    padding: 28px 20px 64px;
-    text-align: center;
+    color: #fff; padding: 24px 20px 60px; text-align: center;
   }
-  .hero .badge {
-    display: inline-block;
-    font-size: 13px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background: rgba(255,255,255,.18);
-  }
-  .hero h1 { font-size: 24px; margin: 12px 0 4px; font-weight: 700; }
-  .hero .sub { font-size: 15px; opacity: .9; }
+  .hero .badge { display: inline-block; font-size: 13px; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.18); }
+  .hero h1 { font-size: 22px; margin: 10px 0 2px; font-weight: 700; }
+  .hero .sub { font-size: 14px; opacity: .9; }
 
-  /* ===== Card ===== */
-  .wrap { max-width: 560px; margin: -44px auto 0; padding: 0 16px; position: relative; }
+  .wrap { max-width: 960px; margin: -40px auto 0; padding: 0 16px; }
+  .tabs {
+    display: flex; gap: 6px; background: #fff; padding: 6px; border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(15,118,110,.12); margin-bottom: 16px;
+  }
+  .tabs button, .subtabs button {
+    flex: 1; border: none; background: transparent; padding: 11px 8px; border-radius: 9px;
+    font: inherit; font-weight: 700; color: var(--muted); cursor: pointer;
+  }
+  .tabs button.active, .subtabs button.active { background: var(--brand-soft); color: var(--brand-dark); }
+  .subtabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .subtabs button { background: #fff; border: 1.5px solid var(--line); }
+  .subtabs button.active { border-color: var(--brand); }
+
   .card {
-    background: var(--surface);
-    border-radius: var(--radius);
+    background: var(--surface); border-radius: var(--radius); padding: 22px 20px 24px;
     box-shadow: 0 10px 30px rgba(15,118,110,.12), 0 1px 3px rgba(0,0,0,.06);
-    padding: 22px 20px 24px;
   }
+  .narrow { max-width: 560px; margin: 0 auto; }
+
+  /* ===== Form ===== */
   .section { margin-bottom: 20px; }
-  .section-title {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 14px; font-weight: 700; color: var(--brand-dark);
-    margin-bottom: 10px;
-  }
-  .step {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--brand); color: #fff;
-    font-size: 12px; display: inline-flex; align-items: center; justify-content: center;
-  }
+  .section-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--brand-dark); margin-bottom: 10px; }
+  .step { width: 22px; height: 22px; border-radius: 50%; background: var(--brand); color: #fff; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
   label.field { display: block; font-size: 14px; font-weight: 600; color: var(--muted); margin: 14px 0 6px; }
   input, select {
-    width: 100%;
-    padding: 12px 14px;
-    font: inherit;
-    font-size: 16px;
-    color: var(--ink);
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    background: #fbfdfd;
+    width: 100%; padding: 12px 14px; font: inherit; font-size: 16px; color: var(--ink);
+    border: 1.5px solid var(--line); border-radius: 10px; background: #fbfdfd; appearance: none;
     transition: border-color .15s, box-shadow .15s, background .15s;
-    appearance: none;
   }
   select {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%230f766e' d='M6 8L0 0h12z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
   }
-  input:focus, select:focus {
-    outline: none;
-    border-color: var(--brand);
-    box-shadow: 0 0 0 4px rgba(15,118,110,.15);
-    background: #fff;
-  }
+  input:focus, select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px rgba(15,118,110,.15); background: #fff; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 420px) { .row { grid-template-columns: 1fr; } }
-
-  .hint {
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--brand-dark);
-    background: var(--brand-soft);
-    border-radius: 8px;
-    padding: 8px 10px;
-    display: none;
-  }
+  .hint { margin-top: 8px; font-size: 13px; color: var(--brand-dark); background: var(--brand-soft); border-radius: 8px; padding: 8px 10px; display: none; }
   .hint.show { display: block; }
 
-  /* ===== Segmented toggle ===== */
-  .seg {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-    background: #eef3f2; padding: 5px; border-radius: 12px;
-  }
-  .seg label {
-    position: relative;
-    text-align: center;
-    padding: 11px 8px;
-    border-radius: 9px;
-    font-weight: 700;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .18s;
-    user-select: none;
-  }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #eef3f2; padding: 5px; border-radius: 12px; }
+  .seg label { position: relative; text-align: center; padding: 11px 8px; border-radius: 9px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .18s; user-select: none; margin: 0; }
   .seg input { position: absolute; opacity: 0; pointer-events: none; }
   .seg label:has(input:checked[value="รับ"]) { background: var(--in-soft); color: var(--in); box-shadow: inset 0 0 0 1.5px var(--in); }
   .seg label:has(input:checked[value="จ่าย"]) { background: var(--out-soft); color: var(--out); box-shadow: inset 0 0 0 1.5px var(--out); }
-  .seg label:has(input:focus-visible) { outline: 3px solid rgba(15,118,110,.35); outline-offset: 2px; }
 
-  /* ===== Quantity stepper ===== */
   .qty { display: flex; align-items: center; gap: 10px; }
-  .qty button.step-btn {
-    width: 48px; height: 48px; flex: 0 0 48px; margin: 0;
-    border-radius: 12px; border: 1.5px solid var(--line);
-    background: #fff; color: var(--brand-dark); font-size: 24px; font-weight: 700;
-    cursor: pointer; padding: 0; font-family: inherit;
-  }
+  .qty button.step-btn { width: 48px; height: 48px; flex: 0 0 48px; margin: 0; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; color: var(--brand-dark); font-size: 24px; font-weight: 700; cursor: pointer; padding: 0; font-family: inherit; }
   .qty button.step-btn:active { background: var(--brand-soft); }
   .qty input { text-align: center; font-size: 20px; font-weight: 700; }
 
-  /* ===== Remember checkbox ===== */
-  .remember {
-    display: flex; align-items: center; gap: 8px;
-    margin-top: 12px; font-size: 14px; color: var(--muted); cursor: pointer;
-  }
+  .remember { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; color: var(--muted); cursor: pointer; }
   .remember input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); }
 
-  /* ===== Button ===== */
-  .submit {
-    width: 100%;
-    margin-top: 8px;
-    padding: 15px;
-    font: inherit; font-size: 18px; font-weight: 700;
-    color: #fff;
-    background: linear-gradient(135deg, var(--brand), #14968b);
-    border: none; border-radius: 12px;
-    cursor: pointer;
+  .btn {
+    width: 100%; margin-top: 8px; padding: 14px; font: inherit; font-size: 17px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, var(--brand), #14968b); border: none; border-radius: 12px; cursor: pointer;
     box-shadow: 0 8px 18px rgba(15,118,110,.25);
-    transition: transform .08s, box-shadow .2s, opacity .2s;
   }
-  .submit:hover { box-shadow: 0 10px 22px rgba(15,118,110,.32); }
-  .submit:active { transform: translateY(1px); }
-  .submit:disabled { opacity: .6; cursor: default; box-shadow: none; }
+  .btn:disabled { opacity: .6; cursor: default; box-shadow: none; }
+  .btn.ghost { background: #fff; color: var(--brand-dark); border: 1.5px solid var(--line); box-shadow: none; width: auto; margin: 0; padding: 10px 14px; font-size: 15px; }
 
-  /* ===== Result ===== */
-  #result {
-    display: none;
-    margin-top: 18px;
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 15px;
-    line-height: 1.6;
-    animation: rise .25s ease-out;
-  }
+  #result { display: none; margin-top: 18px; border-radius: 12px; padding: 16px; font-size: 15px; line-height: 1.6; }
   #result.show { display: block; }
   #result.ok { background: var(--ok-bg); color: var(--ok-ink); }
   #result.err { background: var(--err-bg); color: var(--err-ink); }
   #result .title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
   #result .big { font-size: 28px; font-weight: 700; margin: 6px 0 0; }
   #result .small { font-size: 14px; opacity: .85; }
-  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 20px; }
+  .notice { border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 15px; }
+  .notice.err { background: var(--err-bg); color: var(--err-ink); }
+  .notice.ok { background: var(--ok-bg); color: var(--ok-ink); }
+
+  /* ===== Report ===== */
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .toolbar select { min-width: 220px; flex: 1; }
+  .updated { font-size: 13px; color: var(--muted); margin-left: auto; }
+  .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 640px) { .summary { grid-template-columns: repeat(2, 1fr); } }
+  .stat { background: #fff; border-radius: var(--radius); padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .stat .k { font-size: 13px; color: var(--muted); }
+  .stat .v { font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .vcard { background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.06); border-top: 4px solid var(--line); }
+  .vcard.s-normal { border-top-color: #15803d; }
+  .vcard.s-warn { border-top-color: #ca8a04; }
+  .vcard.s-low { border-top-color: #c2410c; }
+  .vcard.s-empty { border-top-color: #9ca3af; }
+  .vhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .vname { font-weight: 700; font-size: 17px; }
+  .vfull { font-size: 13px; color: var(--muted); }
+  .big-num { font-size: 30px; font-weight: 700; margin-top: 8px; }
+  .big-num small { font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 4px; }
+  .doses { font-size: 14px; color: var(--brand-dark); margin-bottom: 8px; }
+  .pill { font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.normal { background: #e8f7ee; color: #14532d; }
+  .pill.warn { background: #fef9c3; color: #854d0e; }
+  .pill.low { background: #fff1e8; color: #9a3412; }
+  .pill.expire { background: #fdecec; color: #8a1c1c; }
+  .pill.empty { background: #eef0f2; color: #4b5563; }
+  .lots { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+  .lot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; padding: 5px 0; }
+  .lot .ln { font-weight: 600; }
+  .lot .ld { color: var(--muted); font-size: 13px; }
+  .nolot { font-size: 13px; color: var(--muted); padding-top: 6px; }
+  .tbl-wrap { background: #fff; border-radius: var(--radius); box-shadow: 0 1px 4px rgba(0,0,0,.06); overflow-x: auto; }
+  table.data { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 760px; }
+  table.data th, table.data td { padding: 10px; border-bottom: 1px solid #edf2f1; text-align: left; white-space: nowrap; }
+  table.data th { background: #f2f7f6; color: var(--brand-dark); font-weight: 700; }
+  table.data .num { text-align: right; }
+  table.data tr.cancelled td { color: #9ca3af; text-decoration: line-through; }
+  .type-in { color: #15803d; font-weight: 700; }
+  .type-out { color: #c2410c; font-weight: 700; }
+  .empty-msg { text-align: center; padding: 30px; color: var(--muted); }
+
+  /* ===== Print panel ===== */
+  .print-controls { max-width: 560px; margin: 0 auto 16px; }
+  .print-controls .row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 420px) { .print-controls .row3 { grid-template-columns: 1fr; } }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 15px; color: var(--muted); cursor: pointer; }
+  .check input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); }
+  .print-help { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+
+  #printArea { margin-top: 16px; }
+  .sheet {
+    background: #fff; color: #000; width: 100%; max-width: 190mm; margin: 0 auto 24px;
+    padding: 8mm; box-shadow: 0 4px 16px rgba(0,0,0,.12); font-family: "Sarabun", "Tahoma", sans-serif; font-size: 11pt;
+  }
+  .sheet .stitle { text-align: center; font-weight: 700; font-size: 16pt; margin: 2mm 0 4mm; position: relative; }
+  .sheet .stitle .page-no { position: absolute; right: 0; top: 2mm; font-size: 11pt; font-weight: 500; }
+  .sheet .info { display: flex; justify-content: space-between; gap: 6mm; margin-bottom: 1.5mm; flex-wrap: wrap; }
+  .sheet .line { margin-bottom: 2mm; }
+  .sheet .dotted { border-bottom: 1px dotted #000; padding: 0 2mm; }
+  .sheet table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .sheet th, .sheet td { border: 1px solid #000; padding: 0 1.5mm; font-size: 9.5pt; vertical-align: middle; overflow: hidden; }
+  .sheet th { background: #e6e6e6; text-align: center; font-weight: 700; }
+  .sheet td { height: 7.4mm; line-height: 1.1; }
+  .sheet td.n { text-align: right; }
+  .sheet tr.carry td { font-style: italic; }
+  .sheet .foot { font-size: 9pt; margin-top: 3mm; line-height: 1.5; }
+  .sheet .foot u { font-weight: 700; }
+
+  @page { size: A4 portrait; margin: 12mm; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .no-print { display: none !important; }
+    .wrap { margin: 0; max-width: none; padding: 0; }
+    #printArea { margin: 0; }
+    .sheet { box-shadow: none; margin: 0; padding: 0; max-width: none; page-break-after: always; break-after: page; }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+    .sheet table { page-break-inside: auto; }
+    .sheet tr { page-break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
 
-<header class="hero">
+<header class="hero no-print">
   <span class="badge">ระบบคลังวัคซีน</span>
-  <h1>บันทึกรับ-จ่ายวัคซีน</h1>
-  <div class="sub">รพ.สต.เกาะแต้ว</div>
+  <h1>รพ.สต.เกาะแต้ว</h1>
+  <div class="sub">บันทึกรับ-จ่าย • รายงาน • พิมพ์ทะเบียนและ Stock Card</div>
 </header>
 
 <main class="wrap">
-  <section class="card">
-    <form id="f" autocomplete="off">
+  <nav class="tabs no-print">
+    <button class="active" data-tab="record">บันทึก</button>
+    <button data-tab="report">รายงาน</button>
+    <button data-tab="print">พิมพ์</button>
+  </nav>
 
-      <div class="section">
-        <div class="section-title"><span class="step">1</span>เลือกวัคซีน</div>
-        <select id="vaccine" required>
-          <option value="">กำลังโหลดรายการ...</option>
-        </select>
-        <div class="hint" id="vaccineHint"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title"><span class="step">2</span>ประเภทและจำนวน</div>
-        <div class="seg">
-          <label><input type="radio" name="type" value="รับ" checked>+ รับเข้า</label>
-          <label><input type="radio" name="type" value="จ่าย">− จ่ายออก</label>
+  <!-- ================= แท็บ บันทึก ================= -->
+  <section id="tab-record" class="narrow">
+    <div class="card">
+      <form id="f" autocomplete="off">
+        <div class="section">
+          <div class="section-title"><span class="step">1</span>เลือกวัคซีน</div>
+          <select id="vaccine" required><option value="">กำลังโหลดรายการ...</option></select>
+          <div class="hint" id="vaccineHint"></div>
         </div>
 
-        <label class="field">จำนวน (ขวด)</label>
-        <div class="qty">
-          <button type="button" class="step-btn" id="minus" aria-label="ลดจำนวน">−</button>
-          <input type="number" id="qty" min="1" step="1" inputmode="numeric" placeholder="0" required>
-          <button type="button" class="step-btn" id="plus" aria-label="เพิ่มจำนวน">+</button>
-        </div>
-
-        <div class="row">
-          <div>
-            <label class="field" for="date">วันที่</label>
-            <input type="date" id="date" required>
+        <div class="section">
+          <div class="section-title"><span class="step">2</span>ประเภทและจำนวน</div>
+          <div class="seg">
+            <label><input type="radio" name="type" value="รับ" checked>+ รับเข้า</label>
+            <label><input type="radio" name="type" value="จ่าย">− จ่ายออก</label>
           </div>
-          <div>
-            <label class="field" for="party" id="partyLabel">รับจาก</label>
-            <input type="text" id="party" placeholder="เช่น สสอ., รพ.">
+          <label class="field">จำนวน (ขวด)</label>
+          <div class="qty">
+            <button type="button" class="step-btn" id="minus" aria-label="ลดจำนวน">−</button>
+            <input type="number" id="qty" min="1" step="1" inputmode="numeric" placeholder="0" required>
+            <button type="button" class="step-btn" id="plus" aria-label="เพิ่มจำนวน">+</button>
           </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title"><span class="step">3</span>ล็อตและอายุวัคซีน</div>
-        <div class="row">
-          <div>
-            <label class="field" for="lot">เลขที่ผลิต (Lot)</label>
-            <input type="text" id="lot">
-          </div>
-          <div>
-            <label class="field" for="expiry">วันหมดอายุ</label>
-            <input type="date" id="expiry">
+          <div class="row">
+            <div>
+              <label class="field" for="date">วันที่</label>
+              <input type="date" id="date" required>
+            </div>
+            <div>
+              <label class="field" for="party" id="partyLabel">รับจาก</label>
+              <input type="text" id="party" placeholder="เช่น สสอ., รพ.">
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div>
-            <label class="field" for="useBefore">ใช้ก่อนวันที่ (ถ้ามี)</label>
-            <input type="date" id="useBefore">
+
+        <div class="section">
+          <div class="section-title"><span class="step">3</span>ล็อตและอายุวัคซีน</div>
+          <div class="hint show" id="lotHint" style="display:block">จ่ายออกไม่ต้องกรอก Lot ระบบจะเลือกให้ตามวันหมดอายุ (หมดก่อนจ่ายก่อน)</div>
+          <div class="row">
+            <div>
+              <label class="field" for="lot">เลขที่ผลิต (Lot)</label>
+              <input type="text" id="lot">
+            </div>
+            <div>
+              <label class="field" for="expiry">วันหมดอายุ</label>
+              <input type="date" id="expiry">
+            </div>
           </div>
-          <div>
-            <label class="field" for="note">หมายเหตุ</label>
-            <input type="text" id="note">
+          <div class="row">
+            <div>
+              <label class="field" for="useBefore">ใช้ก่อนวันที่ (ถ้ามี)</label>
+              <input type="date" id="useBefore">
+            </div>
+            <div>
+              <label class="field" for="note">หมายเหตุ</label>
+              <input type="text" id="note">
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="section-title"><span class="step">4</span>ยืนยันผู้บันทึก</div>
-        <div class="row">
-          <div>
-            <label class="field" for="recorder">ชื่อผู้บันทึก</label>
-            <input type="text" id="recorder" placeholder="เช่น วราชัย" required>
+        <div class="section">
+          <div class="section-title"><span class="step">4</span>ยืนยันผู้บันทึก</div>
+          <div class="row">
+            <div>
+              <label class="field" for="recorder">ชื่อผู้บันทึก</label>
+              <input type="text" id="recorder" placeholder="เช่น วราชัย" required>
+            </div>
+            <div>
+              <label class="field" for="pin">รหัสบันทึก</label>
+              <input type="password" id="pin" inputmode="numeric" required>
+            </div>
           </div>
-          <div>
-            <label class="field" for="pin">รหัสบันทึก</label>
-            <input type="password" id="pin" inputmode="numeric" required>
-          </div>
+          <label class="remember">
+            <input type="checkbox" id="remember" checked>
+            จำชื่อและรหัสไว้ในเครื่องนี้
+          </label>
         </div>
-        <label class="remember">
-          <input type="checkbox" id="remember" checked>
-          จำชื่อและรหัสไว้ในเครื่องนี้
-        </label>
-      </div>
 
-      <button type="submit" class="submit" id="btn">บันทึกรายการ</button>
-    </form>
-
-    <div id="result" role="status"></div>
+        <button type="submit" class="btn" id="btn">บันทึกรายการ</button>
+      </form>
+      <div id="result" role="status"></div>
+    </div>
   </section>
 
-  <footer>ข้อมูลบันทึกลง Google Sheet ของหน่วยงาน</footer>
+  <!-- ================= แท็บ รายงาน ================= -->
+  <section id="tab-report" class="hidden">
+    <div class="subtabs">
+      <button class="active" data-sub="dash">แดชบอร์ด</button>
+      <button data-sub="ledger">สมุดรายวัคซีน</button>
+    </div>
+
+    <div id="notice" class="notice err hidden"></div>
+
+    <div id="sub-dash">
+      <div class="toolbar">
+        <button class="btn ghost" id="reloadDash">รีเฟรชข้อมูล</button>
+        <span class="updated" id="dashUpdated"></span>
+      </div>
+      <div class="summary" id="summary"></div>
+      <div class="grid" id="cards"></div>
+    </div>
+
+    <div id="sub-ledger" class="hidden">
+      <div class="toolbar">
+        <select id="ledgerSelect"><option value="">-- เลือกวัคซีน --</option></select>
+        <button class="btn ghost" id="reloadLedger">รีเฟรช</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>วันที่</th><th>ประเภท</th><th>รับจาก/จ่ายให้</th>
+              <th class="num">รับ</th><th class="num">จ่าย</th>
+              <th>Lot</th><th>หมดอายุ</th><th class="num">คงเหลือ (ขวด)</th>
+              <th>หมายเหตุ</th><th>ผู้บันทึก</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody">
+            <tr><td colspan="10" class="empty-msg">เลือกวัคซีนเพื่อดูสมุดรายวัคซีน</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= แท็บ พิมพ์ ================= -->
+  <section id="tab-print" class="hidden">
+    <div class="card print-controls no-print">
+      <div class="section-title"><span class="step">1</span>เลือกวัคซีน</div>
+      <select id="printVaccine"><option value="">กำลังโหลด...</option></select>
+
+      <label class="field">เลือกชนิดใบ</label>
+      <select id="printForm">
+        <option value="register">ทะเบียนรับ-จ่ายวัคซีน (หน้า 42)</option>
+        <option value="stock">Stock Card (หน้า 43)</option>
+        <option value="both">ทั้งสองใบ</option>
+      </select>
+
+      <div class="row3" style="margin-top:6px">
+        <div>
+          <label class="field" for="printFrom">ตั้งแต่วันที่</label>
+          <input type="date" id="printFrom">
+        </div>
+        <div>
+          <label class="field" for="printTo">ถึงวันที่</label>
+          <input type="date" id="printTo">
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="printBlank">
+        พิมพ์แบบฟอร์มเปล่า (ไม่ดึงข้อมูล)
+      </label>
+
+      <div style="margin-top:14px; display:flex; gap:10px">
+        <button class="btn" id="printBtn">ดูตัวอย่างและพิมพ์</button>
+      </div>
+      <div class="print-help">
+        ตั้งค่าการพิมพ์: กระดาษ A4 แนวตั้ง ขอบปกติ และปิด "Headers and footers" ในหน้าต่างพิมพ์ ถ้าต้องการบันทึกเป็น PDF ให้เลือก "Save as PDF" ในช่องปลายทาง
+      </div>
+      <div id="printMsg" class="notice hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div id="printArea"></div>
+  </section>
 </main>
 
 <script>
-  // URL ของ Web App (Apps Script)
+  // ====== ตั้งค่า ======
   const API_URL = 'https://script.google.com/macros/s/AKfycbwM5K6lPi0z3AXVRiYWLA1TCr5p5KIgyUGxbh9wwl-Zx7YqPJ0FyrkA4ObruddFubsN/exec';
   const STORE_KEY = 'vaccine_recorder_v1';
+  const PER_PAGE = { register: 18, stock: 22 };  // จำนวนแถวต่อแผ่น ปรับได้ถ้าพิมพ์แล้วล้น/เหลือ
+  const ORG_NAME = 'รพ.สต.เกาะแต้ว';
 
-  let vaccines = [];
+  let vaccines = [];          // เฉพาะที่เปิดใช้งาน
   const $ = id => document.getElementById(id);
 
-  function showResult(kind, title, lines) {
-    const box = $('result');
-    box.className = 'show ' + kind;
-    box.innerHTML = '';
-    const t = document.createElement('div');
-    t.className = 'title';
-    t.textContent = title;
-    box.appendChild(t);
-    lines.forEach(l => {
-      const p = document.createElement('div');
-      p.className = l.big ? 'big' : (l.small ? 'small' : '');
-      p.textContent = l.text;
-      box.appendChild(p);
-    });
+  // ====== ตัวช่วย ======
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
   }
-
+  function fmtNow() {
+    return new Date().toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'short' });
+  }
   function todayLocal() {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     return d.toISOString().slice(0, 10);
   }
-
-  function selectedType() {
-    return document.querySelector('input[name="type"]:checked').value;
+  // yyyy-mm-dd -> dd/mm/พ.ศ.
+  function thaiDate(iso) {
+    if (!iso) return '';
+    const p = String(iso).slice(0, 10).split('-');
+    if (p.length !== 3) return '';
+    return p[2] + '/' + p[1] + '/' + (Number(p[0]) + 543);
   }
+
+  async function api(params) {
+    const url = API_URL + '?' + new URLSearchParams(params).toString();
+    const res = await fetch(url);
+    const text = await res.text();
+    let json;
+    try { json = JSON.parse(text); }
+    catch (_) { throw new Error('ระบบไม่ได้ตอบกลับเป็นข้อมูล ตรวจสอบว่า Web App ถูก Deploy เป็น "ทุกคน (Anyone)"'); }
+    if (!json.ok) throw new Error(json.message);
+    return json.data;
+  }
+
+  async function post(body) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    });
+    const text = await res.text();
+    let json;
+    try { json = JSON.parse(text); }
+    catch (_) { throw new Error('ระบบไม่ได้ตอบกลับ ตรวจสอบว่า Web App ถูก Deploy เป็น "ทุกคน (Anyone)"'); }
+    if (!json.ok) throw new Error(json.message);
+    return json;
+  }
+
+  // ====== สลับแท็บ ======
+  function showTab(name) {
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    ['record', 'report', 'print'].forEach(n => $('tab-' + n).classList.toggle('hidden', n !== name));
+    if (name === 'report') loadDashboard();
+  }
+  function showSub(name) {
+    document.querySelectorAll('.subtabs button').forEach(b => b.classList.toggle('active', b.dataset.sub === name));
+    $('sub-dash').classList.toggle('hidden', name !== 'dash');
+    $('sub-ledger').classList.toggle('hidden', name !== 'ledger');
+    if (name === 'dash') loadDashboard();
+  }
+
+  // ====== โหลดรายการวัคซีน (ใช้ทุกแท็บ) ======
+  async function loadVaccines() {
+    try {
+      const all = await api({ action: 'vaccines' });
+      vaccines = all.filter(v => v.active);
+
+      const fill = (sel, first, withAll) => {
+        sel.innerHTML = '';
+        sel.appendChild(new Option(first, ''));
+        if (withAll) sel.appendChild(new Option('ทุกชนิด (พิมพ์ชุดละ 1 วัคซีน)', 'ALL'));
+        vaccines.forEach(v => sel.appendChild(new Option(v.name + ' (' + v.fullName + ')', v.code)));
+      };
+      fill($('vaccine'), '-- เลือกวัคซีน --', false);
+      fill($('ledgerSelect'), '-- เลือกวัคซีน --', false);
+      fill($('printVaccine'), '-- เลือกวัคซีน --', true);
+    } catch (err) {
+      $('vaccine').innerHTML = '<option value="">โหลดไม่สำเร็จ</option>';
+      showReportError('โหลดรายการวัคซีนไม่สำเร็จ: ' + err.message);
+    }
+  }
+
+  // ====== แท็บ บันทึก ======
+  function selectedType() { return document.querySelector('input[name="type"]:checked').value; }
 
   function updateLabels() {
     const isReceive = selectedType() === 'รับ';
@@ -327,68 +484,39 @@
     $('party').placeholder = isReceive ? 'เช่น สสอ., รพ.' : 'เช่น โรงเรียน, อสม.';
     $('lot').required = isReceive;
     $('expiry').required = isReceive;
+    $('lotHint').style.display = isReceive ? 'none' : 'block';
   }
 
   function updateVaccineHint() {
     const v = vaccines.find(x => x.code === $('vaccine').value);
     const hint = $('vaccineHint');
-    if (v) {
-      hint.textContent = '1 ขวด = ' + v.dosesPerBottle + ' โดส  •  1 กล่อง = ' + v.bottlesPerBox + ' ขวด';
-      hint.classList.add('show');
-    } else {
-      hint.classList.remove('show');
-    }
+    if (v) { hint.textContent = '1 ขวด = ' + v.dosesPerBottle + ' โดส  •  1 กล่อง = ' + v.bottlesPerBox + ' ขวด'; hint.classList.add('show'); }
+    else hint.classList.remove('show');
   }
 
-  function setQty(n) {
-    $('qty').value = Math.max(1, n);
+  function showResult(kind, title, lines) {
+    const box = $('result');
+    box.className = 'show ' + kind;
+    box.innerHTML = '';
+    box.appendChild(el('div', 'title', title));
+    lines.forEach(l => box.appendChild(el('div', l.big ? 'big' : (l.small ? 'small' : ''), l.text)));
   }
 
-  // จำชื่อและรหัสไว้ในเบราว์เซอร์ของเครื่องนี้ (เฉพาะเครื่องที่ติ๊กเลือก)
   function loadRemembered() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
-      if (saved) {
-        $('recorder').value = saved.recorder || '';
-        $('pin').value = saved.pin || '';
-      }
+      if (saved) { $('recorder').value = saved.recorder || ''; $('pin').value = saved.pin || ''; }
     } catch (_) {}
   }
-
   function saveRemembered(recorder, pin) {
     try {
-      if ($('remember').checked) {
-        localStorage.setItem(STORE_KEY, JSON.stringify({ recorder, pin }));
-      } else {
-        localStorage.removeItem(STORE_KEY);
-      }
+      if ($('remember').checked) localStorage.setItem(STORE_KEY, JSON.stringify({ recorder, pin }));
+      else localStorage.removeItem(STORE_KEY);
     } catch (_) {}
-  }
-
-  async function loadVaccines() {
-    try {
-      const res = await fetch(API_URL + '?action=vaccines');
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.message);
-
-      vaccines = json.data.filter(v => v.active);
-      const sel = $('vaccine');
-      sel.innerHTML = '<option value="">-- เลือกวัคซีน --</option>';
-      vaccines.forEach(v => {
-        const o = document.createElement('option');
-        o.value = v.code;
-        o.textContent = v.name + ' (' + v.fullName + ')';
-        sel.appendChild(o);
-      });
-    } catch (err) {
-      $('vaccine').innerHTML = '<option value="">โหลดไม่สำเร็จ</option>';
-      showResult('err', 'โหลดรายการวัคซีนไม่สำเร็จ', [{ text: err.message }]);
-    }
   }
 
   async function save(e) {
     e.preventDefault();
-
     const type = selectedType();
     const recorder = $('recorder').value.trim();
     const pin = $('pin').value.trim();
@@ -405,7 +533,6 @@
       recorder: recorder
     };
 
-    // ตรวจฝั่งหน้าเว็บก่อนส่ง (ฝั่งเซิร์ฟเวอร์ตรวจซ้ำเสมอ)
     if (!data.vaccineCode) return showResult('err', 'ยังไม่ได้เลือกวัคซีน', [{ text: 'กรุณาเลือกวัคซีนในขั้นที่ 1' }]);
     if (!Number.isInteger(data.qtyBottles) || data.qtyBottles <= 0) return showResult('err', 'จำนวนไม่ถูกต้อง', [{ text: 'จำนวนต้องเป็นจำนวนเต็มมากกว่า 0' }]);
     if (!data.date) return showResult('err', 'ยังไม่ได้เลือกวันที่', [{ text: 'กรุณาเลือกวันที่' }]);
@@ -419,38 +546,22 @@
     $('result').className = '';
 
     try {
-      // ใช้ text/plain เพื่อหลีกเลี่ยง CORS preflight ของ Apps Script
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'record', pin: pin, data: data })
-      });
-      const text = await res.text();
-
-      let json;
-      try {
-        json = JSON.parse(text);
-      } catch (_) {
-        throw new Error('ระบบไม่ได้ตอบกลับ ตรวจสอบว่า Web App ถูก Deploy เป็น "ทุกคน (Anyone)" แล้ว');
-      }
-      if (!json.ok) throw new Error(json.message);
-
+      const json = await post({ action: 'record', pin: pin, data: data });
       saveRemembered(recorder, pin);
 
       const v = vaccines.find(x => x.code === data.vaccineCode);
-      const lines = [
-        { text: 'รหัสรายการ ' + json.id, small: true },
-        { text: 'ยอดคงเหลือ', small: true },
-        { text: json.balanceAfter + ' ขวด', big: true }
-      ];
+      const lines = [{ text: 'รหัสรายการ ' + json.id, small: true }];
+      if (type === 'จ่าย' && json.allocation) {
+        json.allocation.forEach(a => lines.push({
+          text: 'Lot ' + a.lot + (a.expiry ? ' (หมด ' + thaiDate(a.expiry) + ')' : '') + ' จ่าย ' + a.qty + ' ขวด', small: true
+        }));
+      }
+      lines.push({ text: 'ยอดคงเหลือ', small: true });
+      lines.push({ text: json.balanceAfter + ' ขวด', big: true });
       if (v) lines.push({ text: '= ' + (json.balanceAfter * v.dosesPerBottle) + ' โดส', small: true });
       showResult('ok', '✓ บันทึก' + (type === 'รับ' ? 'รับเข้า' : 'จ่ายออก') + 'สำเร็จ', lines);
 
-      $('qty').value = '';
-      $('lot').value = '';
-      $('expiry').value = '';
-      $('useBefore').value = '';
-      $('note').value = '';
+      $('qty').value = ''; $('lot').value = ''; $('expiry').value = ''; $('useBefore').value = ''; $('note').value = '';
     } catch (err) {
       showResult('err', 'บันทึกไม่สำเร็จ', [{ text: err.message }]);
     } finally {
@@ -459,12 +570,315 @@
     }
   }
 
+  // ====== แท็บ รายงาน ======
+  function showReportError(msg) {
+    const n = $('notice');
+    n.textContent = msg;
+    n.classList.remove('hidden');
+  }
+  function hideReportError() { $('notice').classList.add('hidden'); }
+
+  const STATUS_CLASS = {
+    'ปกติ': 'normal', 'ต่ำกว่าจุดสั่งซื้อ': 'low', 'มีล็อตใกล้หมดอายุ': 'warn', 'หมด': 'empty',
+    'หมดอายุแล้ว': 'expire', 'วิกฤต': 'expire', 'ใกล้หมดอายุ': 'warn', 'ไม่ทราบวันหมดอายุ': 'empty'
+  };
+  const CARD_CLASS = { 'ปกติ': 's-normal', 'ต่ำกว่าจุดสั่งซื้อ': 's-low', 'มีล็อตใกล้หมดอายุ': 's-warn', 'หมด': 's-empty' };
+
+  async function loadDashboard() {
+    hideReportError();
+    try {
+      const data = await api({ action: 'dashboard' });
+      renderSummary(data);
+      renderCards(data);
+      $('dashUpdated').textContent = 'อัปเดต ' + fmtNow();
+    } catch (err) {
+      showReportError('โหลดแดชบอร์ดไม่สำเร็จ: ' + err.message);
+    }
+  }
+
+  function renderSummary(data) {
+    const box = $('summary');
+    box.innerHTML = '';
+    const totalBottles = data.reduce((s, v) => s + v.bottles, 0);
+    const lowCount = data.filter(v => v.status === 'ต่ำกว่าจุดสั่งซื้อ' || v.status === 'หมด').length;
+    const expireCount = data.reduce((s, v) => s + v.lots.filter(l => ['วิกฤต', 'หมดอายุแล้ว', 'ใกล้หมดอายุ'].includes(l.status)).length, 0);
+    [
+      ['วัคซีนทั้งหมด', data.length + ' ชนิด'],
+      ['คงเหลือรวม', totalBottles + ' ขวด'],
+      ['ต้องสั่งเพิ่ม/หมด', lowCount + ' ชนิด'],
+      ['ล็อตใกล้หมดอายุ', expireCount + ' ล็อต']
+    ].forEach(([k, v]) => {
+      const c = el('div', 'stat');
+      c.appendChild(el('div', 'k', k));
+      c.appendChild(el('div', 'v', v));
+      box.appendChild(c);
+    });
+  }
+
+  function renderCards(data) {
+    const wrap = $('cards');
+    wrap.innerHTML = '';
+    data.forEach(v => {
+      const card = el('div', 'vcard ' + (CARD_CLASS[v.status] || ''));
+      const head = el('div', 'vhead');
+      const tb = el('div');
+      tb.appendChild(el('div', 'vname', v.name));
+      tb.appendChild(el('div', 'vfull', v.fullName));
+      head.appendChild(tb);
+      head.appendChild(el('span', 'pill ' + (STATUS_CLASS[v.status] || 'empty'), v.status));
+      card.appendChild(head);
+
+      const num = el('div', 'big-num', v.bottles);
+      num.appendChild(el('small', '', 'ขวด'));
+      card.appendChild(num);
+      card.appendChild(el('div', 'doses', '= ' + v.doses + ' โดส  (1 ขวด = ' + v.dosesPerBottle + ' โดส)'));
+
+      const lotsBox = el('div', 'lots');
+      if (v.lots.length === 0) {
+        lotsBox.appendChild(el('div', 'nolot', 'ไม่มีล็อตคงเหลือ'));
+      } else {
+        v.lots.forEach(l => {
+          const row = el('div', 'lot');
+          const left = el('div');
+          left.appendChild(el('div', 'ln', 'Lot ' + l.lot + ' • ' + l.balance + ' ขวด'));
+          left.appendChild(el('div', 'ld', 'หมดอายุ ' + (thaiDate(l.expiry) || '-')));
+          row.appendChild(left);
+          row.appendChild(el('span', 'pill ' + (STATUS_CLASS[l.status] || 'empty'), l.status));
+          lotsBox.appendChild(row);
+        });
+      }
+      card.appendChild(lotsBox);
+      wrap.appendChild(card);
+    });
+  }
+
+  async function loadLedger() {
+    const code = $('ledgerSelect').value;
+    const body = $('ledgerBody');
+    body.innerHTML = '';
+    const msgRow = (text) => {
+      const tr = el('tr');
+      const td = el('td', 'empty-msg', text);
+      td.colSpan = 10;
+      tr.appendChild(td);
+      body.appendChild(tr);
+    };
+    if (!code) return msgRow('เลือกวัคซีนเพื่อดูสมุดรายวัคซีน');
+    hideReportError();
+    try {
+      const rows = await api({ action: 'ledger', code: code });
+      if (rows.length === 0) return msgRow('ยังไม่มีรายการของวัคซีนนี้');
+      rows.forEach(x => {
+        const tr = el('tr', x.status === 'ปกติ' ? '' : 'cancelled');
+        tr.appendChild(el('td', '', thaiDate(x.date)));
+        tr.appendChild(el('td', x.type === 'รับ' ? 'type-in' : 'type-out', x.type));
+        tr.appendChild(el('td', '', x.party));
+        tr.appendChild(el('td', 'num', x.received));
+        tr.appendChild(el('td', 'num', x.issued));
+        tr.appendChild(el('td', '', x.lot));
+        tr.appendChild(el('td', '', thaiDate(x.expiry)));
+        tr.appendChild(el('td', 'num', x.balance));
+        tr.appendChild(el('td', '', x.note));
+        tr.appendChild(el('td', '', x.recorder));
+        body.appendChild(tr);
+      });
+    } catch (err) {
+      showReportError('โหลดสมุดรายวัคซีนไม่สำเร็จ: ' + err.message);
+    }
+  }
+
+  // ====== แท็บ พิมพ์ ======
+  const FORM_TITLE = { register: 'ทะเบียนรับ-จ่ายวัคซีน', stock: 'สต๊อกการ์ด' };
+
+  // แบ่งรายการเป็นแผ่น ถ้าล้นหน้า แผ่นถัดไปจะมีแถว "ยกมา" ที่ยอดคงเหลือของแผ่นก่อน
+  function paginate(rows, perPage, startBal, showCarryFirst) {
+    const pages = [];
+    let i = 0;
+    let bal = startBal;
+    do {
+      const page = [];
+      const carry = pages.length > 0 || showCarryFirst;
+      if (carry) page.push({ carry: true, balance: bal });
+      const cap = perPage - page.length;
+      const chunk = rows.slice(i, i + cap);
+      chunk.forEach(r => page.push(r));
+      i += chunk.length;
+      if (chunk.length) bal = chunk[chunk.length - 1].balance;
+      pages.push(page);
+    } while (i < rows.length);
+    return pages;
+  }
+
+  function buildSheet(v, form, pageRows, pageNo, perPage) {
+    const isRegister = form === 'register';
+    const sheet = el('div', 'sheet');
+
+    // หัวกระดาษ
+    const title = el('div', 'stitle', FORM_TITLE[form]);
+    if (!isRegister) title.appendChild(el('span', 'page-no', 'แผ่นที่ ' + pageNo));
+    sheet.appendChild(title);
+
+    const info1 = el('div', 'info');
+    info1.appendChild(el('div', '', 'ชื่อวัคซีน: ' + v.name + ' (' + v.fullName + ')'));
+    info1.appendChild(el('div', '', 'ชื่อหน่วยงาน: ' + ORG_NAME));
+    sheet.appendChild(info1);
+
+    const info2 = el('div', 'info');
+    info2.appendChild(el('div', '', 'ขนาดบรรจุต่อขวด ' + v.dosesPerBottle + ' โดส'));
+    info2.appendChild(el('div', '', 'ขนาดบรรจุต่อกล่อง ' + v.bottlesPerBox + ' ขวด'));
+    sheet.appendChild(info2);
+
+    // ตาราง
+    const table = el('table');
+    const colgroup = el('colgroup');
+    const widths = isRegister
+      ? ['13%', '17%', '8%', '8%', '9%', '12%', '12%', '12%', '9%']
+      : ['13%', '19%', '9%', '9%', '10%', '13%', '14%', '13%'];
+    widths.forEach(w => { const c = el('col'); c.style.width = w; colgroup.appendChild(c); });
+    table.appendChild(colgroup);
+
+    const thead = el('thead');
+    const h1 = el('tr');
+    const h2 = el('tr');
+    const th = (text, attrs) => {
+      const c = el('th', '', text);
+      if (attrs) Object.entries(attrs).forEach(([k, val]) => c.setAttribute(k, val));
+      return c;
+    };
+    h1.appendChild(th('วัน เดือน ปี', { rowspan: '2' }));
+    h1.appendChild(th('รับจาก/จ่ายให้', { rowspan: '2' }));
+    h1.appendChild(th('จำนวน', { colspan: '3' }));
+    h1.appendChild(th('เลขที่ผลิต', { rowspan: '2' }));
+    h1.appendChild(th('วันหมดอายุ', { rowspan: '2' }));
+    if (isRegister) h1.appendChild(th('ใช้ก่อนวันที่', { rowspan: '2' }));
+    h1.appendChild(th('หมายเหตุ', { rowspan: '2' }));
+    h2.appendChild(th('รับ'));
+    h2.appendChild(th('จ่าย'));
+    h2.appendChild(th('คงเหลือ'));
+    thead.appendChild(h1);
+    thead.appendChild(h2);
+    table.appendChild(thead);
+
+    const tbody = el('tbody');
+    for (let k = 0; k < perPage; k++) {
+      const r = pageRows[k];
+      const tr = el('tr', r && r.carry ? 'carry' : '');
+      const td = (text, cls) => tr.appendChild(el('td', cls || '', text));
+      if (r && r.carry) {
+        td('');
+        td('ยกมา');
+        td(''); td('');
+        td(r.balance, 'n');
+        td(''); td('');
+        if (isRegister) td('');
+        td('');
+      } else if (r) {
+        td(thaiDate(r.date));
+        td(r.party || '');
+        td(r.received === '' || r.received === undefined ? '' : r.received, 'n');
+        td(r.issued === '' || r.issued === undefined ? '' : r.issued, 'n');
+        td(r.balance === '' || r.balance === undefined ? '' : r.balance, 'n');
+        td(r.lot || '');
+        td(thaiDate(r.expiry));
+        if (isRegister) td(thaiDate(r.useBefore));
+        td(r.note || '');
+      } else {
+        for (let c = 0; c < (isRegister ? 9 : 8); c++) td('');
+      }
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    sheet.appendChild(table);
+
+    if (isRegister) {
+      const foot = el('div', 'foot');
+      const u = el('u', '', 'หมายเหตุ');
+      foot.appendChild(u);
+      foot.appendChild(document.createTextNode(' ช่อง "ใช้ก่อนวันที่" ให้กรอกวันที่ระยะเวลา 3 เดือน และ 1 เดือนตามลำดับ โดยนับจากวันที่รับวัคซีนมา แต่ต้องก่อนวันหมดอายุ'));
+      sheet.appendChild(foot);
+    }
+    return sheet;
+  }
+
+  async function buildPrint() {
+    const code = $('printVaccine').value;
+    const formSel = $('printForm').value;
+    const from = $('printFrom').value;
+    const to = $('printTo').value;
+    const blank = $('printBlank').checked;
+    const area = $('printArea');
+    const msg = $('printMsg');
+
+    if (!code) {
+      msg.className = 'notice err';
+      msg.textContent = 'กรุณาเลือกวัคซีนก่อน';
+      return;
+    }
+
+    const list = code === 'ALL' ? vaccines : vaccines.filter(v => v.code === code);
+    const forms = formSel === 'both' ? ['register', 'stock'] : [formSel];
+    const btn = $('printBtn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังเตรียมข้อมูล...';
+    area.innerHTML = '';
+    msg.className = 'notice ok';
+    msg.textContent = 'กำลังดึงข้อมูล...';
+    msg.classList.remove('hidden');
+
+    try {
+      let sheetCount = 0;
+      for (const v of list) {
+        let rows = [];
+        let startBal = 0;
+        if (!blank) {
+          const ledger = await api({ action: 'ledger', code: v.code });
+          const active = ledger.filter(r => r.status === 'ปกติ');
+          const before = from ? active.filter(r => r.date < from) : [];
+          startBal = before.length ? before[before.length - 1].balance : 0;
+          rows = active.filter(r => (!from || r.date >= from) && (!to || r.date <= to));
+        }
+
+        for (const form of forms) {
+          const perPage = PER_PAGE[form];
+          const pages = blank
+            ? [[]]
+            : paginate(rows, perPage, startBal, !!from);
+          pages.forEach((pageRows, idx) => {
+            area.appendChild(buildSheet(v, form, pageRows, idx + 1, perPage));
+            sheetCount++;
+          });
+        }
+      }
+
+      msg.className = 'notice ok';
+      msg.textContent = 'พร้อมพิมพ์ ' + sheetCount + ' แผ่น กำลังเปิดหน้าต่างพิมพ์...';
+      setTimeout(() => window.print(), 400);
+    } catch (err) {
+      msg.className = 'notice err';
+      msg.textContent = 'เตรียมข้อมูลไม่สำเร็จ: ' + err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'ดูตัวอย่างและพิมพ์';
+    }
+  }
+
+  // ====== ผูกเหตุการณ์ ======
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  document.querySelectorAll('.subtabs button').forEach(b => b.addEventListener('click', () => showSub(b.dataset.sub)));
+
   document.querySelectorAll('input[name="type"]').forEach(r => r.addEventListener('change', updateLabels));
   $('vaccine').addEventListener('change', updateVaccineHint);
-  $('minus').addEventListener('click', () => setQty((Number($('qty').value) || 1) - 1));
-  $('plus').addEventListener('click', () => setQty((Number($('qty').value) || 0) + 1));
+  $('minus').addEventListener('click', () => { $('qty').value = Math.max(1, (Number($('qty').value) || 1) - 1); });
+  $('plus').addEventListener('click', () => { $('qty').value = Math.max(1, (Number($('qty').value) || 0) + 1); });
   $('f').addEventListener('submit', save);
 
+  $('reloadDash').addEventListener('click', loadDashboard);
+  $('reloadLedger').addEventListener('click', loadLedger);
+  $('ledgerSelect').addEventListener('change', loadLedger);
+
+  $('printBtn').addEventListener('click', buildPrint);
+
+  // ====== เริ่มต้น ======
   $('date').value = todayLocal();
   loadRemembered();
   updateLabels();
