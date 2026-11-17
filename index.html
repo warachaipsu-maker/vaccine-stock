@@ -44,7 +44,6 @@
     color: #fff;
     padding: 28px 20px 64px;
     text-align: center;
-    position: relative;
   }
   .hero .badge {
     display: inline-block;
@@ -52,7 +51,6 @@
     padding: 4px 12px;
     border-radius: 999px;
     background: rgba(255,255,255,.18);
-    letter-spacing: .2px;
   }
   .hero h1 { font-size: 24px; margin: 12px 0 4px; font-weight: 700; }
   .hero .sub { font-size: 15px; opacity: .9; }
@@ -65,12 +63,10 @@
     box-shadow: 0 10px 30px rgba(15,118,110,.12), 0 1px 3px rgba(0,0,0,.06);
     padding: 22px 20px 24px;
   }
-
   .section { margin-bottom: 20px; }
   .section-title {
     display: flex; align-items: center; gap: 8px;
     font-size: 14px; font-weight: 700; color: var(--brand-dark);
-    text-transform: none; letter-spacing: .2px;
     margin-bottom: 10px;
   }
   .step {
@@ -78,7 +74,6 @@
     background: var(--brand); color: #fff;
     font-size: 12px; display: inline-flex; align-items: center; justify-content: center;
   }
-
   label.field { display: block; font-size: 14px; font-weight: 600; color: var(--muted); margin: 14px 0 6px; }
   input, select {
     width: 100%;
@@ -145,10 +140,17 @@
     width: 48px; height: 48px; flex: 0 0 48px; margin: 0;
     border-radius: 12px; border: 1.5px solid var(--line);
     background: #fff; color: var(--brand-dark); font-size: 24px; font-weight: 700;
-    cursor: pointer; padding: 0;
+    cursor: pointer; padding: 0; font-family: inherit;
   }
   .qty button.step-btn:active { background: var(--brand-soft); }
   .qty input { text-align: center; font-size: 20px; font-weight: 700; }
+
+  /* ===== Remember checkbox ===== */
+  .remember {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px; font-size: 14px; color: var(--muted); cursor: pointer;
+  }
+  .remember input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); }
 
   /* ===== Button ===== */
   .submit {
@@ -258,6 +260,24 @@
         </div>
       </div>
 
+      <div class="section">
+        <div class="section-title"><span class="step">4</span>ยืนยันผู้บันทึก</div>
+        <div class="row">
+          <div>
+            <label class="field" for="recorder">ชื่อผู้บันทึก</label>
+            <input type="text" id="recorder" placeholder="เช่น วราชัย" required>
+          </div>
+          <div>
+            <label class="field" for="pin">รหัสบันทึก</label>
+            <input type="password" id="pin" inputmode="numeric" required>
+          </div>
+        </div>
+        <label class="remember">
+          <input type="checkbox" id="remember" checked>
+          จำชื่อและรหัสไว้ในเครื่องนี้
+        </label>
+      </div>
+
       <button type="submit" class="submit" id="btn">บันทึกรายการ</button>
     </form>
 
@@ -270,6 +290,7 @@
 <script>
   // URL ของ Web App (Apps Script)
   const API_URL = 'https://script.google.com/macros/s/AKfycbwM5K6lPi0z3AXVRiYWLA1TCr5p5KIgyUGxbh9wwl-Zx7YqPJ0FyrkA4ObruddFubsN/exec';
+  const STORE_KEY = 'vaccine_recorder_v1';
 
   let vaccines = [];
   const $ = id => document.getElementById(id);
@@ -323,6 +344,27 @@
     $('qty').value = Math.max(1, n);
   }
 
+  // จำชื่อและรหัสไว้ในเบราว์เซอร์ของเครื่องนี้ (เฉพาะเครื่องที่ติ๊กเลือก)
+  function loadRemembered() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+      if (saved) {
+        $('recorder').value = saved.recorder || '';
+        $('pin').value = saved.pin || '';
+      }
+    } catch (_) {}
+  }
+
+  function saveRemembered(recorder, pin) {
+    try {
+      if ($('remember').checked) {
+        localStorage.setItem(STORE_KEY, JSON.stringify({ recorder, pin }));
+      } else {
+        localStorage.removeItem(STORE_KEY);
+      }
+    } catch (_) {}
+  }
+
   async function loadVaccines() {
     try {
       const res = await fetch(API_URL + '?action=vaccines');
@@ -348,6 +390,8 @@
     e.preventDefault();
 
     const type = selectedType();
+    const recorder = $('recorder').value.trim();
+    const pin = $('pin').value.trim();
     const data = {
       date: $('date').value,
       vaccineCode: $('vaccine').value,
@@ -357,7 +401,8 @@
       lot: $('lot').value.trim(),
       expiry: $('expiry').value,
       useBefore: $('useBefore').value,
-      note: $('note').value.trim()
+      note: $('note').value.trim(),
+      recorder: recorder
     };
 
     // ตรวจฝั่งหน้าเว็บก่อนส่ง (ฝั่งเซิร์ฟเวอร์ตรวจซ้ำเสมอ)
@@ -365,6 +410,8 @@
     if (!Number.isInteger(data.qtyBottles) || data.qtyBottles <= 0) return showResult('err', 'จำนวนไม่ถูกต้อง', [{ text: 'จำนวนต้องเป็นจำนวนเต็มมากกว่า 0' }]);
     if (!data.date) return showResult('err', 'ยังไม่ได้เลือกวันที่', [{ text: 'กรุณาเลือกวันที่' }]);
     if (type === 'รับ' && (!data.lot || !data.expiry)) return showResult('err', 'ข้อมูลไม่ครบ', [{ text: 'การรับเข้าต้องกรอก Lot และวันหมดอายุ' }]);
+    if (!recorder) return showResult('err', 'ยังไม่ได้ระบุชื่อผู้บันทึก', [{ text: 'กรุณากรอกชื่อผู้บันทึกในขั้นที่ 4' }]);
+    if (!pin) return showResult('err', 'ยังไม่ได้ใส่รหัส', [{ text: 'กรุณาใส่รหัสบันทึกในขั้นที่ 4' }]);
 
     const btn = $('btn');
     btn.disabled = true;
@@ -376,7 +423,7 @@
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'record', data: data })
+        body: JSON.stringify({ action: 'record', pin: pin, data: data })
       });
       const text = await res.text();
 
@@ -384,9 +431,11 @@
       try {
         json = JSON.parse(text);
       } catch (_) {
-        throw new Error('ระบบไม่ได้ตอบกลับเป็นข้อมูล อาจยังไม่ได้ล็อกอิน Google ในเบราว์เซอร์นี้');
+        throw new Error('ระบบไม่ได้ตอบกลับ ตรวจสอบว่า Web App ถูก Deploy เป็น "ทุกคน (Anyone)" แล้ว');
       }
       if (!json.ok) throw new Error(json.message);
+
+      saveRemembered(recorder, pin);
 
       const v = vaccines.find(x => x.code === data.vaccineCode);
       const lines = [
@@ -417,6 +466,7 @@
   $('f').addEventListener('submit', save);
 
   $('date').value = todayLocal();
+  loadRemembered();
   updateLabels();
   loadVaccines();
 </script>
