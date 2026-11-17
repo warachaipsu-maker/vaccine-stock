@@ -171,19 +171,23 @@
   .print-help { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
 
   #printArea { margin-top: 16px; }
+
+  /* แผ่นพิมพ์ A4 ตามแบบฟอร์มจริง */
   .sheet {
     background: #fff; color: #000; width: 100%; max-width: 190mm; margin: 0 auto 24px;
-    padding: 8mm; box-shadow: 0 4px 16px rgba(0,0,0,.12); font-family: "Sarabun", "Tahoma", sans-serif; font-size: 11pt;
+    padding: 6mm 8mm; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    font-family: "Sarabun", "Tahoma", sans-serif; font-size: 11pt;
   }
-  .sheet .stitle { text-align: center; font-weight: 700; font-size: 16pt; margin: 2mm 0 4mm; position: relative; }
-  .sheet .stitle .page-no { position: absolute; right: 0; top: 2mm; font-size: 11pt; font-weight: 500; }
-  .sheet .info { display: flex; justify-content: space-between; gap: 6mm; margin-bottom: 1.5mm; flex-wrap: wrap; }
-  .sheet .line { margin-bottom: 2mm; }
-  .sheet .dotted { border-bottom: 1px dotted #000; padding: 0 2mm; }
-  .sheet table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .sheet th, .sheet td { border: 1px solid #000; padding: 0 1.5mm; font-size: 9.5pt; vertical-align: middle; overflow: hidden; }
-  .sheet th { background: #e6e6e6; text-align: center; font-weight: 700; }
-  .sheet td { height: 7.4mm; line-height: 1.1; }
+  .sheet .stitle { text-align: center; font-weight: 700; font-size: 15pt; margin: 1mm 0 3mm; }
+  .sheet .pageno { text-align: right; font-size: 11pt; margin-bottom: 1mm; }
+  .sheet .fline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2mm 3mm; margin: 1.5mm 0; font-size: 11pt; }
+  .sheet .fbox { white-space: nowrap; }
+  .sheet .dotted { display: inline-block; border-bottom: 1px dotted #000; min-width: 16mm; padding: 0 1mm; text-align: left; }
+  .sheet .dotted.grow { flex: 1 1 55mm; min-width: 40mm; }
+  .sheet table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 2mm; }
+  .sheet th, .sheet td { border: 1px solid #000; padding: 0 1mm; font-size: 9.5pt; vertical-align: middle; overflow: hidden; }
+  .sheet th { background: #e6e6e6; font-weight: 700; text-align: center; height: 6mm; line-height: 1.1; }
+  .sheet td { height: 7.6mm; line-height: 1.1; }
   .sheet td.n { text-align: right; }
   .sheet tr.carry td { font-style: italic; }
   .sheet .foot { font-size: 9pt; margin-top: 3mm; line-height: 1.5; }
@@ -197,7 +201,6 @@
     #printArea { margin: 0; }
     .sheet { box-shadow: none; margin: 0; padding: 0; max-width: none; page-break-after: always; break-after: page; }
     .sheet:last-child { page-break-after: auto; break-after: auto; }
-    .sheet table { page-break-inside: auto; }
     .sheet tr { page-break-inside: avoid; }
   }
 </style>
@@ -207,7 +210,7 @@
 <header class="hero no-print">
   <span class="badge">ระบบคลังวัคซีน</span>
   <h1>รพ.สต.เกาะแต้ว</h1>
-  <div class="sub">บันทึกรับ-จ่าย • รายงาน • พิมพ์ทะเบียนและ Stock Card</div>
+  <div class="sub">บันทึกรับ-จ่าย • รายงาน • พิมพ์ทะเบียนและสต๊อกการ์ด</div>
 </header>
 
 <main class="wrap">
@@ -350,7 +353,7 @@
       <label class="field">เลือกชนิดใบ</label>
       <select id="printForm">
         <option value="register">ทะเบียนรับ-จ่ายวัคซีน (หน้า 42)</option>
-        <option value="stock">Stock Card (หน้า 43)</option>
+        <option value="stock">สต๊อกการ์ด (หน้า 43)</option>
         <option value="both">ทั้งสองใบ</option>
       </select>
 
@@ -370,11 +373,11 @@
         พิมพ์แบบฟอร์มเปล่า (ไม่ดึงข้อมูล)
       </label>
 
-      <div style="margin-top:14px; display:flex; gap:10px">
+      <div style="margin-top:14px">
         <button class="btn" id="printBtn">ดูตัวอย่างและพิมพ์</button>
       </div>
       <div class="print-help">
-        ตั้งค่าการพิมพ์: กระดาษ A4 แนวตั้ง ขอบปกติ และปิด "Headers and footers" ในหน้าต่างพิมพ์ ถ้าต้องการบันทึกเป็น PDF ให้เลือก "Save as PDF" ในช่องปลายทาง
+        ตั้งค่าการพิมพ์: กระดาษ A4 แนวตั้ง ขอบปกติ และปิด "Headers and footers" ในหน้าต่างพิมพ์ ถ้าต้องการบันทึกเป็น PDF ให้เลือก "Save as PDF" ที่ช่องปลายทาง
       </div>
       <div id="printMsg" class="notice hidden" style="margin-top:12px"></div>
     </div>
@@ -387,10 +390,10 @@
   // ====== ตั้งค่า ======
   const API_URL = 'https://script.google.com/macros/s/AKfycbwM5K6lPi0z3AXVRiYWLA1TCr5p5KIgyUGxbh9wwl-Zx7YqPJ0FyrkA4ObruddFubsN/exec';
   const STORE_KEY = 'vaccine_recorder_v1';
-  const PER_PAGE = { register: 18, stock: 22 };  // จำนวนแถวต่อแผ่น ปรับได้ถ้าพิมพ์แล้วล้น/เหลือ
+  const PER_PAGE = { register: 20, stock: 22 };   // จำนวนแถวว่างต่อแผ่น (ปรับได้ถ้าพิมพ์แล้วไม่พอดี)
   const ORG_NAME = 'รพ.สต.เกาะแต้ว';
 
-  let vaccines = [];          // เฉพาะที่เปิดใช้งาน
+  let vaccines = [];   // เฉพาะที่เปิดใช้งาน
   const $ = id => document.getElementById(id);
 
   // ====== ตัวช่วย ======
@@ -688,16 +691,17 @@
   }
 
   // ====== แท็บ พิมพ์ ======
-  const FORM_TITLE = { register: 'ทะเบียนรับ-จ่ายวัคซีน', stock: 'สต๊อกการ์ด' };
 
-  // แบ่งรายการเป็นแผ่น ถ้าล้นหน้า แผ่นถัดไปจะมีแถว "ยกมา" ที่ยอดคงเหลือของแผ่นก่อน
-  function paginate(rows, perPage, startBal, showCarryFirst) {
+  // แบ่งรายการเป็นแผ่น
+  // แผ่นแรกจะมีแถว "ยกมา" ก็ต่อเมื่อมียอดก่อนช่วงวันที่ที่เลือก
+  // แผ่นถัดไปจะมีแถว "ยกมา" เสมอ เพื่อต่อยอดจากแผ่นก่อน
+  function paginate(rows, perPage, startBal, firstHasCarry) {
     const pages = [];
     let i = 0;
     let bal = startBal;
     do {
       const page = [];
-      const carry = pages.length > 0 || showCarryFirst;
+      const carry = pages.length > 0 || firstHasCarry;
       if (carry) page.push({ carry: true, balance: bal });
       const cap = perPage - page.length;
       const chunk = rows.slice(i, i + cap);
@@ -709,48 +713,78 @@
     return pages;
   }
 
+  // ช่องกรอกแบบมีเส้นประ เช่น "ชื่อวัคซีน ____"
+  function fbox(label, value, grow) {
+    const w = el('span', 'fbox');
+    w.appendChild(document.createTextNode(label + ' '));
+    const v = el('span', 'dotted' + (grow ? ' grow' : ''), value === undefined || value === null ? '' : String(value));
+    w.appendChild(v);
+    return w;
+  }
+  function fline(parts) {
+    const line = el('div', 'fline');
+    parts.forEach(p => line.appendChild(typeof p === 'string' ? document.createTextNode(p) : p));
+    return line;
+  }
+
+  // สร้างแผ่นหนึ่งแผ่น ตามแบบฟอร์มจริง
   function buildSheet(v, form, pageRows, pageNo, perPage) {
-    const isRegister = form === 'register';
+    const isReg = form === 'register';
     const sheet = el('div', 'sheet');
+    const fullName = v.name + ' (' + v.fullName + ')';
 
-    // หัวกระดาษ
-    const title = el('div', 'stitle', FORM_TITLE[form]);
-    if (!isRegister) title.appendChild(el('span', 'page-no', 'แผ่นที่ ' + pageNo));
-    sheet.appendChild(title);
-
-    const info1 = el('div', 'info');
-    info1.appendChild(el('div', '', 'ชื่อวัคซีน: ' + v.name + ' (' + v.fullName + ')'));
-    info1.appendChild(el('div', '', 'ชื่อหน่วยงาน: ' + ORG_NAME));
-    sheet.appendChild(info1);
-
-    const info2 = el('div', 'info');
-    info2.appendChild(el('div', '', 'ขนาดบรรจุต่อขวด ' + v.dosesPerBottle + ' โดส'));
-    info2.appendChild(el('div', '', 'ขนาดบรรจุต่อกล่อง ' + v.bottlesPerBox + ' ขวด'));
-    sheet.appendChild(info2);
+    if (isReg) {
+      // ทะเบียนรับ-จ่าย (หน้า 42): หัวเรื่อง และบรรทัดเดียวกันทั้งชื่อวัคซีนและขนาดบรรจุ
+      sheet.appendChild(el('div', 'stitle', 'ทะเบียนรับ-จ่ายวัคซีน'));
+      sheet.appendChild(fline([
+        fbox('ชื่อวัคซีน', fullName, true),
+        fbox('ขนาดบรรจุต่อขวด', v.dosesPerBottle),
+        'โดส',
+        fbox('ขนาดบรรจุต่อกล่อง', v.bottlesPerBox),
+        'ขวด'
+      ]));
+    } else {
+      // สต๊อกการ์ด (หน้า 43): แผ่นที่มุมขวา หัวเรื่องกลาง และชื่อหน่วยงาน
+      const pn = el('div', 'pageno');
+      pn.appendChild(document.createTextNode('แผ่นที่ '));
+      pn.appendChild(el('span', 'dotted', String(pageNo)));
+      sheet.appendChild(pn);
+      sheet.appendChild(el('div', 'stitle', 'สต๊อกการ์ด'));
+      sheet.appendChild(fline([
+        fbox('ชื่อวัคซีน', fullName, true),
+        fbox('ชื่อหน่วยงาน', ORG_NAME, true)
+      ]));
+      sheet.appendChild(fline([
+        fbox('ขนาดบรรจุต่อขวด', v.dosesPerBottle),
+        'โดส',
+        fbox('ขนาดบรรจุต่อกล่อง', v.bottlesPerBox),
+        'ขวด'
+      ]));
+    }
 
     // ตาราง
     const table = el('table');
     const colgroup = el('colgroup');
-    const widths = isRegister
-      ? ['13%', '17%', '8%', '8%', '9%', '12%', '12%', '12%', '9%']
-      : ['13%', '19%', '9%', '9%', '10%', '13%', '14%', '13%'];
+    const widths = isReg
+      ? ['12%', '17%', '7%', '7%', '9%', '12%', '11%', '11%', '14%']
+      : ['14%', '22%', '9%', '9%', '10%', '13%', '13%', '10%'];
     widths.forEach(w => { const c = el('col'); c.style.width = w; colgroup.appendChild(c); });
     table.appendChild(colgroup);
 
-    const thead = el('thead');
-    const h1 = el('tr');
-    const h2 = el('tr');
     const th = (text, attrs) => {
       const c = el('th', '', text);
       if (attrs) Object.entries(attrs).forEach(([k, val]) => c.setAttribute(k, val));
       return c;
     };
-    h1.appendChild(th('วัน เดือน ปี', { rowspan: '2' }));
-    h1.appendChild(th('รับจาก/จ่ายให้', { rowspan: '2' }));
+    const thead = el('thead');
+    const h1 = el('tr');
+    const h2 = el('tr');
+    h1.appendChild(th(isReg ? 'วัน เดือน ปี' : 'วัน/เดือน/ปี', { rowspan: '2' }));
+    h1.appendChild(th(isReg ? 'รับจาก / จ่ายให้' : 'รับจาก/จ่ายให้', { rowspan: '2' }));
     h1.appendChild(th('จำนวน', { colspan: '3' }));
     h1.appendChild(th('เลขที่ผลิต', { rowspan: '2' }));
     h1.appendChild(th('วันหมดอายุ', { rowspan: '2' }));
-    if (isRegister) h1.appendChild(th('ใช้ก่อนวันที่', { rowspan: '2' }));
+    if (isReg) h1.appendChild(th('ใช้ก่อนวันที่', { rowspan: '2' }));
     h1.appendChild(th('หมายเหตุ', { rowspan: '2' }));
     h2.appendChild(th('รับ'));
     h2.appendChild(th('จ่าย'));
@@ -760,17 +794,14 @@
     table.appendChild(thead);
 
     const tbody = el('tbody');
+    const cols = isReg ? 9 : 8;
     for (let k = 0; k < perPage; k++) {
       const r = pageRows[k];
       const tr = el('tr', r && r.carry ? 'carry' : '');
       const td = (text, cls) => tr.appendChild(el('td', cls || '', text));
       if (r && r.carry) {
-        td('');
-        td('ยกมา');
-        td(''); td('');
-        td(r.balance, 'n');
-        td(''); td('');
-        if (isRegister) td('');
+        td(''); td('ยกมา'); td(''); td(''); td(r.balance, 'n'); td(''); td('');
+        if (isReg) td('');
         td('');
       } else if (r) {
         td(thaiDate(r.date));
@@ -780,21 +811,24 @@
         td(r.balance === '' || r.balance === undefined ? '' : r.balance, 'n');
         td(r.lot || '');
         td(thaiDate(r.expiry));
-        if (isRegister) td(thaiDate(r.useBefore));
+        if (isReg) td(thaiDate(r.useBefore));
         td(r.note || '');
       } else {
-        for (let c = 0; c < (isRegister ? 9 : 8); c++) td('');
+        for (let c = 0; c < cols; c++) td('');
       }
       tbody.appendChild(tr);
     }
     table.appendChild(tbody);
     sheet.appendChild(table);
 
-    if (isRegister) {
+    if (isReg) {
       const foot = el('div', 'foot');
-      const u = el('u', '', 'หมายเหตุ');
-      foot.appendChild(u);
-      foot.appendChild(document.createTextNode(' ช่อง "ใช้ก่อนวันที่" ให้กรอกวันที่ระยะเวลา 3 เดือน และ 1 เดือนตามลำดับ โดยนับจากวันที่รับวัคซีนมา แต่ต้องก่อนวันหมดอายุ'));
+      foot.appendChild(el('u', '', 'หมายเหตุ'));
+      foot.appendChild(document.createTextNode(
+        ' ในช่อง "ใช้ก่อนวันที่" สต๊อควัคซีนระดับเขต (สคร.) และระดับจังหวัด (สสจ.) ไม่ต้องกรอกข้อความ'
+        + ' แต่ในระดับอำเภอ (สสอ., รพ. ที่เป็น CUP) และระดับสถานบริการ (รพ./PCU/สอ./ศูนย์บริการสาธารณสุข)'
+        + ' ให้กรอกข้อความ (วัน/เดือน/ปี) ที่ระยะเวลา 3 เดือน และ 1 เดือนตามลำดับ โดยนับจากวันที่รับวัคซีนมา แต่ต้องก่อนวันหมดอายุ'
+      ));
       sheet.appendChild(foot);
     }
     return sheet;
@@ -812,6 +846,7 @@
     if (!code) {
       msg.className = 'notice err';
       msg.textContent = 'กรุณาเลือกวัคซีนก่อน';
+      msg.classList.remove('hidden');
       return;
     }
 
@@ -830,19 +865,19 @@
       for (const v of list) {
         let rows = [];
         let startBal = 0;
+        let hasBefore = false;
         if (!blank) {
           const ledger = await api({ action: 'ledger', code: v.code });
           const active = ledger.filter(r => r.status === 'ปกติ');
           const before = from ? active.filter(r => r.date < from) : [];
-          startBal = before.length ? before[before.length - 1].balance : 0;
+          hasBefore = before.length > 0;
+          startBal = hasBefore ? before[before.length - 1].balance : 0;
           rows = active.filter(r => (!from || r.date >= from) && (!to || r.date <= to));
         }
 
         for (const form of forms) {
           const perPage = PER_PAGE[form];
-          const pages = blank
-            ? [[]]
-            : paginate(rows, perPage, startBal, !!from);
+          const pages = blank ? [[]] : paginate(rows, perPage, startBal, hasBefore);
           pages.forEach((pageRows, idx) => {
             area.appendChild(buildSheet(v, form, pageRows, idx + 1, perPage));
             sheetCount++;
